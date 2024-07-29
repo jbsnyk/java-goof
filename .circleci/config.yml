@@ -1,43 +1,41 @@
-# This config was automatically generated from your source code
-# Stacks detected: cicd:github-actions:.github/workflows,deps:java:.
 version: 2.1
+orbs:
+  snyk: snyk/snyk@2.1.0
+
 jobs:
-  test-java:
+  build-and-test:
     docker:
-      - image: cimg/openjdk:17.0
+      - image: cimg/open:jdk:11.0
     steps:
       - checkout
       - run:
-          name: Calculate cache key
-          command: |-
-            find . -name 'pom.xml' -o -name 'gradlew*' -o -name '*.gradle*' | \
-                    sort | xargs cat > /tmp/CIRCLECI_CACHE_KEY
-      - restore_cache:
-          key: cache-{{ checksum "/tmp/CIRCLECI_CACHE_KEY" }}
+          name: Build
+          command: mvn -B -DskipTests clean pacakge
       - run:
-          command: mvn verify
-      - store_test_results:
-          path: target/surefire-reports
-      - save_cache:
-          key: cache-{{ checksum "/tmp/CIRCLECI_CACHE_KEY" }}
-          paths:
-            - ~/.m2/repository
-  deploy:
-    # This is an example deploy job, not actually used by the workflow
+          name: Test
+          command: mvn test
+  snyk-scan:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/openjdk:11.0-node
     steps:
-      # Replace this with steps to deploy to users
+      - checkout
       - run:
-          name: deploy
-          command: '#e.g. ./deploy.sh'
+          name: Install Snyk to HTML
+          command: npm install --prefix=$HOME/.local -g snyk-to-html
+      - snyk/scan:
+          monitor-on-build: false
+          fail-on-issues: false
+          command: code test
+          additional-arguments: --all-proejcts --json-file-output=code-results.json
       - run:
-          name: found github actions config
-          command: ':'
+          name: Generate Snyk HTML report
+          command: cat code-results.json | snyk-to-html -o code-report.html 
+      - store_artifacts:
+          paht: code-report.html
+
 workflows:
-  build-and-test:
-    jobs:
-      - test-java
-    # - deploy:
-    #     requires:
-    #       - test-java
+  build-test-snyk:
+      jobs:
+        - build-and-test
+        - snyk-scan
+          
