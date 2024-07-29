@@ -14,24 +14,24 @@ jobs:
       - run:
           name: Test
           command: mvn test
-    snyk-scan:
-      docker:
-        - image: cimg/openjdk:11.0-node
-      steps:
-        - checkout
-        - run:
-            name: Install Snyk to HTML
-            command: npm install --prefix=$HOME/.local -g snyk-to-html
-        - snyk/scan:
-            monitor-on-build: false
-            fail-on-issues: false
-            command: code test
-            additional-arguments: --json-file-output=code-results.json --all-projects
-        - run:
-            name: Generate Snyk to HTML Report
-            command: cat code-results.json | snyk-to-html -o code-report.html
-        - store_artifacts:
-            path: code-report.html
+  snyk-scan:
+    docker:
+      - image: cimg/openjdk:11.0-node
+    steps:
+      - checkout
+      - run:
+          name: Install Snyk to HTML
+          command: npm install --prefix=$HOME/.local -g snyk-to-html
+      - snyk/scan:
+          monitor-on-build: false
+          fail-on-issues: false
+          command: code test
+          additional-arguments: --json-file-output=code-results.json --all-projects
+      - run:
+          name: Generate Snyk to HTML Report
+          command: cat code-results.json | snyk-to-html -o code-report.html
+      - store_artifacts:
+          path: code-report.html
 
 workflows:
   build-test-snyk:
