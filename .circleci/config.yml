@@ -4,12 +4,12 @@ orbs:
 
 jobs:
   snyk-scan:
-  docker:
-    - image: cimg/openjdk:11.0
-  steps:
-    - checkout
-    - run: mvn install
-    - snyk/scan
+    docker:
+      - image: cimg/openjdk:11.0
+    steps:
+      - checkout
+      - run: mvn install
+      - snyk/scan
 
 workflows:
   build-test-snyk:
