@@ -27,14 +27,13 @@ jobs:
     - name: Build with Maven
       run: mvn install
 
-    - name: snyk install
-      run: npm install -g snyk
-
-    - name: snyk scan
-      run: |
-        snyk auth --auth-type=token
-        snyk monitor --all-projects
-      env:
-        SNYK_TOKEN: $ {{ secrets.SNYK_TOKEN }}
+    - name: Snyk Scan
+      uses: snyk/actions/maven@master
+      env: 
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      with:
+        args: --all-projects
+      
+      
     
 
