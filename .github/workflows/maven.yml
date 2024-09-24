@@ -31,7 +31,9 @@ jobs:
       run: npm install -g snyk
 
     - name: snyk scan
-      run: snyk monitor --all-projects
+      run: |
+        snyk auth --auth-type=token
+        snyk monitor --all-projects
       env:
         SNYK_TOKEN: $ {{ secrets.SNYK_TOKEN }}
     
