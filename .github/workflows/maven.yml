@@ -28,7 +28,7 @@ jobs:
       run: mvn install
 
     - name: snyk install
-    - run: npm install -g snyk
+      run: npm install -g snyk
 
     - name: snyk scan
       run: snyk monitor --all-projects
