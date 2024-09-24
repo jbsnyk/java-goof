@@ -33,7 +33,7 @@ jobs:
         snyk auth ${{secrets.SNYK_TOKEN}}
 
     - name: snyk monitor
-      run: snyk monitor --all-proiects
+      run: snyk monitor --maven-aggregate-project
       
       
     
