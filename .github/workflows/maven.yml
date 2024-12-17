@@ -32,7 +32,7 @@ jobs:
         sudo npm install snyk -g
         sudo npm install npm install -g snyk-delta
         snyk auth ${{secrets.SNYK_TOKEN}}
-        ./snyk_delta_all_projects.sh --org=b2f127a4-8023-4261-82db-1ae26d6db633 --remote-repo-url=${GITHUB_WORKSPACE} --severity-threshold=medium
+        /bin/bash snyk_delta_all_projects.sh --org=b2f127a4-8023-4261-82db-1ae26d6db633 --remote-repo-url=${GITHUB_WORKSPACE} --severity-threshold=medium
         snyk monitor --all-projects --org=b2f127a4-8023-4261-82db-1ae26d6db633 --remote-repo-url=${GITHUB_WORKSPACE}
 
 
