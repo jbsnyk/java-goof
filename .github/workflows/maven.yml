@@ -34,7 +34,7 @@ jobs:
         ls -la
         snyk auth ${{secrets.SNYK_TOKEN}}
         /bin/bash snyk_delta_all_projects.sh --org=b2f127a4-8023-4261-82db-1ae26d6db633 --remote-repo-url=https://github.com/${GITHUB_REPOSITORY} --severity-threshold=medium
-        
+        snyk monitor --all-projects --org=b2f127a4-8023-4261-82db-1ae26d6db633 --remote-repo-url=${GITHUB_WORKSPACE}
        
 
 
