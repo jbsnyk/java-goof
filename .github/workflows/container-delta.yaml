@@ -27,5 +27,5 @@ jobs:
         cd todolist-goof
         docker build -t todolist-goof:latest .
         snyk auth ${{secrets.SNYK_TOKEN}}
-        snyk container test --exclude-app-vulns --org=b2f127a4-8023-4261-82db-1ae26d6db633 --json todolist-goof:latest | snyk-delta --baselineOrg 
+        snyk container test --exclude-app-vulns --org=b2f127a4-8023-4261-82db-1ae26d6db633 --json todolist-goof:latest | snyk-delta --baselineOrg=b2f127a4-8023-4261-82db-1ae26d6db633 
         snyk container monitor --org=b2f127a4-8023-4261-82db-1ae26d6db633 --exclude-app-vulns todolist-goof:latest
