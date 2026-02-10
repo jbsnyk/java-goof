@@ -37,4 +37,4 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: |
-          snyk sbom test --file=target/bom.json
+          snyk sbom test --experimental --file=target/bom.json
