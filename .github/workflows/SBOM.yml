@@ -27,7 +27,7 @@ jobs:
       # 2. Manually download and install Snyk CLI v1.1302.0
       - name: Install Snyk CLI v1.1302.0
         run: |
-          curl -L https://static.snyk.io/cli/v1.1302.0/snyk-linux -o snyk
+          curl -L https://static.snyk.io/cli/v1.1300.0/snyk-linux -o snyk
           chmod +x snyk
           sudo mv snyk /usr/local/bin/snyk
           snyk --version # Verify it is 1.1302.0
