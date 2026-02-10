@@ -31,10 +31,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: |
-          ls
-          cd todolist-goof
-          cd todolist-web-struts
-          snyk sbom --file=pom.xml \
+          snyk sbom --file=todolist-goof/todolist-web-struts/pom.xml \
                     --format=cyclonedx1.6+json \
                     --json-file-output=snyk.json
 
