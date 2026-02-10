@@ -1,8 +1,7 @@
 name: "Java Goof Manual SBOM & Snyk Scan"
 
 on:
-  push:
-    branches: [ "master", "main" ]
+  workflow_dispatch: 
 
 jobs:
   snyk-manual-scan:
