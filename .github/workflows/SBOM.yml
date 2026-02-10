@@ -40,7 +40,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: |
-          snyk sbom test --file=snyk.json
+          snyk sbom test --experimental --file=snyk.json
 
       # 4. Upload SBOM as artifact for visibility
       - name: Upload SBOM Artifact
