@@ -1,10 +1,11 @@
-name: "Java Goof SBOM & Snyk Scan"
+name: "Java Goof Manual SBOM & Snyk Scan"
 
 on:
-  workflow_dispatch
+  push:
+    branches: [ "master", "main" ]
 
 jobs:
-  analyze:
+  snyk-manual-scan:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -17,17 +18,24 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      # java-goof is a multi-module project; makeAggregateBom is required
+      # 1. Generate the SBOM using the maven plugin
       - name: Generate Aggregate SBOM
         run: |
           mvn org.cyclonedx:cyclonedx-maven-plugin:makeAggregateBom \
           -DoutputFormat=json \
           -DoutputName=bom
 
-      # Use the official Snyk action to scan the SBOM file
+      # 2. Manually download and install Snyk CLI v1.1302.0
+      - name: Install Snyk CLI v1.1302.0
+        run: |
+          curl -L https://static.snyk.io/cli/v1.1302.0/snyk-linux -o snyk
+          chmod +x snyk
+          sudo mv snyk /usr/local/bin/snyk
+          snyk --version # Verify it is 1.1302.0
+
+      # 3. Authenticate and Scan
       - name: Snyk SBOM Scan
-        uses: snyk/actions/setup@master
-      - env:
+        env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: |
           snyk sbom test --file=target/bom.json
