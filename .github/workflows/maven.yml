@@ -1,41 +1,39 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+name: Snyk Monitor
 
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
+on:
+  workflow_dispatch:
 
-name: Java CI with Maven
-
-on: workflow_dispatch
- 
+env:
+  SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+  # Optional: set if you need to target a specific org
+  # SNYK_CFG_ORG: your-org-id-or-slug
 
 jobs:
-  build:
-
+  snyk-monitor:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
-    - name: Build with Maven
-      run: mvn install
+      - uses: actions/checkout@v4
 
-    - name: set up snyk
-      run: |
-        sudo npm install snyk -g
-        sudo npm install npm install -g snyk-delta
-        ls -la
-        snyk auth ${{secrets.SNYK_TOKEN}}
-        /bin/bash snyk_delta_all_projects.sh --org=NEW_ORG_ID --remote-repo-url=${GITHUB_REPOSITORY} --severity-threshold=medium
-        snyk monitor --all-projects --org=NEW_ORG_ID --remote-repo-url=${GITHUB_WORKSPACE}
-        
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: maven
+
+      - name: Build project and resolve dependencies
+        run: mvn install -DskipTests -B
+
+      - name: Set up Node.js (for Snyk CLI)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Snyk CLI
+        run: npm install -g snyk
+
+      - name: Snyk monitor
+        run: snyk monitor --all-projects
        
 
 
