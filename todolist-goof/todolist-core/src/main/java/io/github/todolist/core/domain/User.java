@@ -24,7 +24,7 @@
 
 package io.github.todolist.core.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 
 /**
